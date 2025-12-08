@@ -15,3 +15,9 @@ val GradientBackground = listOf(
     Color(0xFF1E293B),
     Color(0xFF0F766E),
 )
+
+val GradientBasicAlertDialogBackground = listOf(
+//    Color(0xFF1B1B1B),
+    Color(0xFF141414),
+    Color(0xFF0D0D0D)
+)
