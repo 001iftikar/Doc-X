@@ -1,7 +1,6 @@
 package com.example.docx.presentation.schedule_screen
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,18 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,21 +30,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
 import com.example.docx.domain.model.Appointment
-import com.example.docx.ui.theme.GradientBasicAlertDialogBackground
+import com.example.docx.presentation.components.PopUpDialogComponent
 import com.example.docx.utils.toPrettyDate
 import com.example.docx.utils.toReadableTime
 import java.time.Instant
 
 @Composable
-fun ScheduleScreen() {
+fun ScheduleScreen(
+    modifier: Modifier = Modifier
+) {
     var isRequestAcceptPopUpOpen by remember { mutableStateOf(false) }
     var requestAcceptPopUpText by remember { mutableStateOf("") }
     var isAcceptButtonClicked by remember { mutableStateOf(false) }
@@ -64,12 +59,11 @@ fun ScheduleScreen() {
         isRequestAcceptPopUpOpen = true
     }
     Scaffold(
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
+        modifier = modifier
+    ) { _ ->
         LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(innerPadding),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -86,7 +80,7 @@ fun ScheduleScreen() {
             }
         }
 
-        RequestAcceptPopUp(
+        PopUpDialogComponent(
             text = requestAcceptPopUpText,
             state = isRequestAcceptPopUpOpen,
             onDismissRequest = {
@@ -207,53 +201,6 @@ private fun AppointmentCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun RequestAcceptPopUp(
-    text: String,
-    state: Boolean,
-    onDismissRequest: () -> Unit,
-    onConfirmClick: () -> Unit
-) {
-    if (state) {
-        BasicAlertDialog(
-            modifier = Modifier
-                .background(
-                    brush = Brush.verticalGradient(GradientBasicAlertDialogBackground),
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .padding(6.dp),
-            onDismissRequest = onDismissRequest,
-            properties = DialogProperties(
-                dismissOnBackPress = true,
-                dismissOnClickOutside = true
-            ),
-            content = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text)
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        TextButton(
-                            onClick = onDismissRequest
-                        ) {
-                            Text("Cancel")
-                        }
-                        TextButton(
-                            onClick = onConfirmClick
-                        ) {
-                            Text("Yes")
-                        }
-                    }
-                }
-            }
-        )
-    }
-}
 
 // The epoch millis will come from db, so I am just hard coding to current time
 private val dummyAppointments = listOf(
@@ -355,9 +302,11 @@ private val dummyAppointments = listOf(
         isBooked = false,
         illness = null
     )
-    ).sortedWith(
+    )
+    .filter { !it.isSeen }
+    .sortedWith(
     compareByDescending<Appointment> { it.isBooked }
-        .thenBy { it.start }
+        .thenBy { it.start } // todo Do these inside viewmodel in Default dispatcher
 )
 
 
