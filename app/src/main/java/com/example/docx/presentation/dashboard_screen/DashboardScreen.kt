@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,13 +50,13 @@ fun DashboardScreen(
         }
     }
     var isPopUpDialogOpen by remember { mutableStateOf(false) }
+    var prescription by remember { mutableStateOf("") }
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
-               // .systemBarsPadding(),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -69,6 +71,17 @@ fun DashboardScreen(
                 // todo filter in the view model for real data and just show here
             )
 
+            OutlinedTextField(
+                modifier = Modifier
+                    .size(400.dp)
+                    .fillMaxWidth()
+                    ,
+                value = prescription,
+                onValueChange = {prescription = it},
+                placeholder = {Text("prescription")}
+            )
+
+
             TextButton(
                 onClick = {
                     isPopUpDialogOpen = true
@@ -80,7 +93,8 @@ fun DashboardScreen(
                 border = BorderStroke(
                     width = 1.dp,
                     color = if (isSystemInDarkTheme()) Color.White else Color.Black
-                )
+                ),
+                enabled = prescription.isNotEmpty() && prescription.length >= 20
             ) {
                 Text(
                     text = "Mark as seen",
@@ -95,7 +109,7 @@ fun DashboardScreen(
             state = isPopUpDialogOpen,
             onDismissRequest = { isPopUpDialogOpen = false },
             onConfirmClick = {
-                // todo mark patient as seen and simulate loading the next earliest patient with text "Loading next patient"
+                // todo mark patient as seen and save the history with given prescription and simulate loading the next earliest patient with text "Loading next patient"
                 isPopUpDialogOpen = false
             }
         )

@@ -1,5 +1,10 @@
 package com.example.docx.presentation.navigation
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -43,6 +48,18 @@ fun NavigationRoot(
             modifier = Modifier.fillMaxSize()
                 .padding(innerPadding),
             onBack = navigator::goBack,
+            transitionSpec = {
+                slideInHorizontally { it } + fadeIn() togetherWith
+                        slideOutHorizontally { -it } + fadeOut()
+            },
+            popTransitionSpec = {
+                slideInHorizontally { -it } + fadeIn() togetherWith
+                        slideOutHorizontally { it } + fadeOut()
+            },
+            predictivePopTransitionSpec = {
+                slideInHorizontally { -it } + fadeIn() togetherWith
+                        slideOutHorizontally { it } + fadeOut()
+            },
             entries = navigationState.toEntries(
                 entryProvider {
                     entry<Route.DashboardScreen> {
