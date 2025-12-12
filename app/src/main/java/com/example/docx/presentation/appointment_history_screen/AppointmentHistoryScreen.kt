@@ -93,7 +93,7 @@ private fun HistoryCard(
                 color = Color.White
             )
             Text(
-                text = appointment.appointedBy,
+                text = appointment.appointedBy!!,
                 color = Color.White
             )
 

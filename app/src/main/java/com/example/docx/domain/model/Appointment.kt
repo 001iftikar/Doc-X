@@ -11,7 +11,7 @@ data class Appointment(
     val start: Long,
     val end: Long,
     val appointedOn: Long = Instant.now().toEpochMilli(), // the date of appointment
-    val appointedBy: String,
+    val appointedBy: String?,
     val isBooked: Boolean = false, // will not booked when created
     val illness: String?, // since watching time is only 30 mins, it is a good idea to what the patient is suffering from, also making it OPTIONAL
     val isSeen: Boolean = false // when the appointment gets created isSeen is false, then the doctor mark the patient as seen after seeing the patient

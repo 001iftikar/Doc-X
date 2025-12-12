@@ -37,6 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.docx.domain.model.Appointment
 import com.example.docx.presentation.components.PopUpDialogComponent
+import com.example.docx.ui.theme.DarkGreen
+import com.example.docx.ui.theme.DarkRed
+import com.example.docx.ui.theme.DarkYellow
 import com.example.docx.utils.toPrettyDate
 import com.example.docx.utils.toReadableTime
 import java.time.Instant
@@ -113,7 +116,13 @@ private fun AppointmentCard(
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 16.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = if (appointment.isBooked) Color(0xFF85140C) else Color(0xFF046322)
+            containerColor = if (appointment.isBooked) {
+                DarkRed
+            } else if (appointment.appointedBy == null) {
+                DarkGreen
+            } else {
+                DarkYellow
+            }
         )
     ) {
         Column(
@@ -132,7 +141,7 @@ private fun AppointmentCard(
                     fontWeight = FontWeight.SemiBold
                 )
 
-                if (!appointment.isBooked) {
+                if (!appointment.isBooked && appointment.appointedBy != null) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -185,7 +194,8 @@ private fun AppointmentCard(
             }
             Text(
                 text = if (appointment.isBooked) "Booked by: ${appointment.appointedBy}"
-                else "Appointed By: ${appointment.appointedBy}",
+                else if (appointment.appointedBy != null) "Appointed By: ${appointment.appointedBy}"
+                else "Free",
                 color = Color.White
             )
 
@@ -221,7 +231,7 @@ private val dummyAppointments = listOf(
     Appointment(
         start = Instant.now().toEpochMilli(),
         end = Instant.now().toEpochMilli(),
-        appointedBy = "Eve",
+        appointedBy = null,
         isBooked = true,
         illness = "Depression, Anxiety"
     ),
@@ -235,7 +245,7 @@ private val dummyAppointments = listOf(
     Appointment(
         start = Instant.now().toEpochMilli(),
         end = Instant.now().toEpochMilli(),
-        appointedBy = "Joe",
+        appointedBy = null,
         isBooked = false,
         illness = null
     ),
@@ -249,7 +259,7 @@ private val dummyAppointments = listOf(
     Appointment(
         start = Instant.now().toEpochMilli(),
         end = Instant.now().toEpochMilli(),
-        appointedBy = "Joe",
+        appointedBy = null,
         isBooked = false,
         illness = null
     ),

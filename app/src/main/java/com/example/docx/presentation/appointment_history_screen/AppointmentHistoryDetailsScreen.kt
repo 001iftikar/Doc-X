@@ -42,7 +42,7 @@ fun AppointmentHistoryDetailsScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = appointment.appointedBy,
+                text = appointment.appointedBy!!,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )

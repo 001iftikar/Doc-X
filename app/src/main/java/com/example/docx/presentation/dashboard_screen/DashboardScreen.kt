@@ -152,7 +152,7 @@ private fun EarliestAppointmentCard(
                 )
 
                 Text(
-                    text = appointment.appointedBy
+                    text = appointment.appointedBy!!
                 )
 
                 appointment.illness?.let {
